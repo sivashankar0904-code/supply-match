@@ -212,6 +212,9 @@ tempCodeRunnerFile.py
 # supply-match build artifacts (FAISS index, embeddings, metadata)
 /artifacts
 
+# MLflow local tracking store
+/mlruns
+
 # Marimo
 marimo/_static/
 marimo/_lsp/

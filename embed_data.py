@@ -14,11 +14,14 @@ Roadmap:
     Add drift monitoring with Evidently
 """
 
+import time
+
 import faiss
 import pandas as pd
 
 import config
 from embedding import embed_texts
+from mlflow_tracker import log_embed_run
 
 
 def load_master_items() -> pd.DataFrame:
@@ -44,13 +47,18 @@ def main() -> None:
     masters = load_master_items()
     print(f"Embedding {len(masters):,} master items with {config.MODEL_NAME} ...")
 
+    start = time.perf_counter()
     index = build_index(masters)
+    duration_s = time.perf_counter() - start
 
     faiss.write_index(index, str(config.INDEX_PATH))
     masters.to_parquet(config.MASTER_META_PATH, index=False)
 
     print(f"  index   -> {config.INDEX_PATH} ({index.ntotal:,} vectors, dim {index.d})")
     print(f"  meta    -> {config.MASTER_META_PATH}")
+    print(f"  built in {duration_s:.1f}s")
+
+    log_embed_run(num_masters=index.ntotal, dim=index.d, duration_s=duration_s)
 
 
 if __name__ == "__main__":

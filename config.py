@@ -27,3 +27,8 @@ EMBED_BATCH_SIZE = int(os.getenv("SM_BATCH_SIZE", "256"))
 # SM_SAMPLE_SIZE=0 (or "all"/"none") to embed the full dataset.
 _sample = os.getenv("SM_SAMPLE_SIZE", "10000").strip().lower()
 SAMPLE_SIZE: int | None = None if _sample in ("", "0", "none", "all") else int(_sample)
+
+# MLflow tracking. Default store is ./mlruns in the project root (local file
+# store), which is what `mlflow ui` reads by default when run from here.
+MLFLOW_TRACKING_URI = os.getenv("SM_MLFLOW_URI", (ROOT / "mlruns").as_uri())
+MLFLOW_EXPERIMENT = os.getenv("SM_MLFLOW_EXPERIMENT", "supply-match")
