@@ -209,6 +209,9 @@ tempCodeRunnerFile.py
 # PyPI configuration file
 .pypirc
 
+# supply-match build artifacts (FAISS index, embeddings, metadata)
+/artifacts
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
