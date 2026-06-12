@@ -215,6 +215,9 @@ tempCodeRunnerFile.py
 # MLflow local tracking store
 /mlruns
 
+# Inference logs (drift-monitoring source data)
+/logs
+
 # Marimo
 marimo/_static/
 marimo/_lsp/

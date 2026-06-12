@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 
 import config
 from mlflow_tracker import log_inference
+from monitoring.drift_monitor import maybe_check_drift, record_inference
 from search import get_matcher
 
 
@@ -79,4 +80,19 @@ def match(req: MatchRequest, background_tasks: BackgroundTasks) -> MatchResponse
         latency_ms=latency_ms,
         top_score=top_score,
     )
+
+    # Per-query rows for drift monitoring (one row per query).
+    records = [
+        {
+            "query": query,
+            "top_score": round(hits[0].score, 4) if hits else 0.0,
+            "n_matches": len(hits),
+            "k": req.k,
+            "latency_ms": round(latency_ms, 2),
+        }
+        for query, hits in zip(req.queries, batched)
+    ]
+    background_tasks.add_task(record_inference, records)
+    # Runs after record_inference, so the rows it averages include this request.
+    background_tasks.add_task(maybe_check_drift)
     return MatchResponse(results=results)
