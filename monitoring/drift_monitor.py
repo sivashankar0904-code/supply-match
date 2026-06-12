@@ -99,6 +99,8 @@ def maybe_check_drift() -> dict | None:
                 len(recent),
                 config.DRIFT_SCORE_THRESHOLD,
             )
+        if config.DRIFT_AUTO_REPORT and len(df) >= 2:
+            run_drift_report()
         return result
     except Exception as exc:  # monitoring must never break a request
         log.warning("maybe_check_drift failed: %s", exc)
@@ -123,7 +125,7 @@ def run_drift_report(
         raise ValueError(f"Need at least 2 logged requests to compare; have {len(df)}.")
     if len(df) < 2 * window:
         log.warning(
-            "Only %d rows for window=%d — baseline and recent windows overlap, "
+            "Only %d rows for window=%d - baseline and recent windows overlap, "
             "so drift will be understated.",
             len(df),
             window,

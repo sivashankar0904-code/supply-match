@@ -26,6 +26,8 @@ DRIFT_REPORT_HTML = ROOT / "monitoring" / "drift_report.html"
 DRIFT_CHECK_EVERY = int(os.getenv("SM_DRIFT_CHECK_EVERY", "5"))
 DRIFT_CHECK_WINDOW = int(os.getenv("SM_DRIFT_CHECK_WINDOW", "50"))
 DRIFT_SCORE_THRESHOLD = float(os.getenv("SM_DRIFT_SCORE_THRESHOLD", "0.5"))
+# When True, each inline check also regenerates the Evidently HTML report.
+DRIFT_AUTO_REPORT = os.getenv("SM_DRIFT_AUTO_REPORT", "1") not in ("0", "false", "no", "off")
 
 # Embedding model. all-MiniLM-L6-v2 is symmetric (no query/passage prefixes),
 # 384-dim, and fast — a good default for short product-name matching. Swap to
